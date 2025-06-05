@@ -24,6 +24,23 @@ def hash_link(url):
     return hashlib.sha256(url.encode()).hexdigest()
 
 
+def ensure_table_exists(conn):
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS articles (
+                id TEXT PRIMARY KEY,
+                title TEXT,
+                link TEXT,
+                description TEXT,
+                pub_date TEXT,
+                source TEXT
+            )
+        """
+        )
+    conn.commit()
+
+
 def insert_article(conn, article):
     with conn.cursor() as cur:
         cur.execute(
@@ -47,6 +64,8 @@ def insert_article(conn, article):
 def main():
     conn = psycopg2.connect(**DB_CONFIG)
 
+    ensure_table_exists(conn)
+
     for url in RSS_FEEDS:
         feed = feedparser.parse(url)
         for entry in feed.entries[:10]:
@@ -59,7 +78,6 @@ def main():
                 "source": feed.feed.title,
             }
             insert_article(conn, article)
-    print(article)
 
     conn.close()
 
