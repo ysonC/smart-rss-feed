@@ -4,7 +4,7 @@ import hashlib
 import feedparser
 import psycopg2
 
-from shared.config import load_config
+from src.config import *
 
 config = load_config()
 RSS_FEEDS = config["feeds"]
@@ -54,7 +54,7 @@ def insert_article(conn, article):
     conn.commit()
 
 
-def main():
+def fetch_save():
     conn = psycopg2.connect(**DB_CONFIG)
 
     ensure_table_exists(conn)
@@ -76,4 +76,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    fetch_save()
