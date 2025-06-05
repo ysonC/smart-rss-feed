@@ -1,22 +1,14 @@
 # rss-news/backend/fetcher.py
 import hashlib
-from datetime import datetime
 
 import feedparser
 import psycopg2
 
-RSS_FEEDS = [
-    "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
-    "https://feeds.bbci.co.uk/news/world/rss.xml",
-]
+from shared.config import load_config
 
-DB_CONFIG = {
-    "host": "rss-db.ysonsbaolab.dev",
-    "port": "32005",
-    "database": "rss",
-    "user": "admin",
-    "password": "password",
-}
+config = load_config()
+RSS_FEEDS = config["feeds"]
+DB_CONFIG = config["db"]
 
 
 # Hash function to deduplicate
@@ -34,7 +26,8 @@ def ensure_table_exists(conn):
                 link TEXT,
                 description TEXT,
                 pub_date TEXT,
-                source TEXT
+                source TEXT,
+                clicked Boolean DEFAULT false
             )
         """
         )
@@ -68,7 +61,7 @@ def main():
 
     for url in RSS_FEEDS:
         feed = feedparser.parse(url)
-        for entry in feed.entries[:10]:
+        for entry in feed.entries[:50]:
             article = {
                 "id": hash_link(entry.link),
                 "title": entry.title,

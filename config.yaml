@@ -1,0 +1,16 @@
+db:
+  host: rss-db.ysonsbaolab.dev
+  port: 32005
+  database: rss
+  user: admin
+  password: password
+
+feeds:
+  - https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
+  - https://feeds.bbci.co.uk/news/world/rss.xml
+
+rss:
+  site_title: "My Aggregated Feed"
+  site_link: "https://yourdomain.com/rss.xml"
+  site_description: "Custom news feed from multiple sources"
+  max_items: 30
