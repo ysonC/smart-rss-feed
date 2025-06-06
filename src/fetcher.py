@@ -1,4 +1,3 @@
-# rss-news/backend/fetcher.py
 import hashlib
 
 import feedparser

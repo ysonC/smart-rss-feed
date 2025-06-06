@@ -1,8 +1,11 @@
-# rss-news/frontend/app.py
+import threading
+import time
+
 import psycopg2
 from flask import Flask, Response, jsonify
 
 from config import load_config
+from fetcher import fetch_save
 
 app = Flask(__name__)
 config = load_config()
@@ -65,5 +68,21 @@ def get_latest_news():
     return jsonify(news_list)
 
 
+def start_background_fetcher(interval_seconds=600):
+    def run_loop():
+        while True:
+            try:
+                print("Running fetcher...")
+                fetch_save()
+                print("Fetcher completed.")
+            except Exception as e:
+                print(f"Fetcher error: {e}")
+            time.sleep(interval_seconds)
+
+    thread = threading.Thread(target=run_loop, daemon=True)
+    thread.start()
+
+
 if __name__ == "__main__":
+    start_background_fetcher(interval_seconds=600)
     app.run(host="0.0.0.0", port=8080)
