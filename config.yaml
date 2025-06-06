@@ -8,6 +8,11 @@ db:
 feeds:
   - https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
   - https://feeds.bbci.co.uk/news/world/rss.xml
+  - https://feeds.content.dowjones.io/public/rss/mw_topstories
+  - https://feeds.content.dowjones.io/public/rss/mw_bulletins
+  - https://feeds.bloomberg.com/markets/news.rss
+  - https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114
+  - https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=15837362
 
 rss:
   site_title: "My Aggregated Feed"
