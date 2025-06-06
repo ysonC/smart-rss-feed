@@ -2,8 +2,9 @@ import hashlib
 
 import feedparser
 import psycopg2
+from dateutil import parser as dateparser
 
-from src.config import *
+from config import load_config
 
 config = load_config()
 RSS_FEEDS = config["feeds"]
@@ -24,7 +25,7 @@ def ensure_table_exists(conn):
                 title TEXT,
                 link TEXT,
                 description TEXT,
-                pub_date TEXT,
+                pub_date TIMESTAMPTZ,
                 source TEXT,
                 clicked Boolean DEFAULT false
             )
@@ -66,7 +67,7 @@ def fetch_save():
                 "title": entry.title,
                 "link": entry.link,
                 "description": entry.get("summary", ""),
-                "pub_date": entry.published,
+                "pub_date": dateparser.parse(entry.published),
                 "source": feed.feed.title,
             }
             insert_article(conn, article)
